@@ -1,0 +1,70 @@
+<?php 
+session_start(); 
+$conn = mysqli_connect("localhost", "root", "", "shop");
+
+$query = "SELECT * FROM `bed`";
+$run = mysqli_query($conn, $query);
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bed</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .card-img-top {
+            transition: transform 0.3s ease-in-out;
+            object-fit: cover; 
+            width: 100%;          
+            height: 200px; 
+        }
+
+        .card-img-top:hover {
+            transform: scale(1.1);
+        }
+
+        .card-body {
+            text-align: center;
+        }
+
+        .product-card {
+            margin: 15px;
+        }
+    </style>
+</head>
+<body>
+<?php include 'header.php'; ?>
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Welcome to the BED Section</h1>
+    <div class="row">
+        <?php while ($data = mysqli_fetch_assoc($run)) { ?>
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="./uploads/<?php echo $data['photo']; ?>" class="card-img-top" alt="Product Image">
+                    <div class="card-body">
+                        <h5 class="card-title"><?php echo $data['product_name']; ?></h5>
+                        <p class="card-text"><?php echo substr($data['product_description'], 0, 100); ?>...</p>
+                        <p class="text-success">Price: $<?php echo $data['product_price']; ?></p>
+
+                        <?php if (isset($_SESSION['email'])) { ?>
+                            
+                            <a href="add_to_cart.php?id=<?php echo $data['id']; ?>" class="btn btn-primary">Add to Cart</a>
+                            <a href="buy_now.php?id=<?php echo $data['id']; ?>&category=bed" class="btn btn-success">Buy Now</a>
+
+                        <?php } else { ?>
+                            
+                            <a href="login.php" class="btn btn-warning">Login to Purchase</a>
+                        <?php } ?>
+                        
+                    </div>
+                </div>
+            </div>
+        <?php } ?>
+    </div>
+</div>
+
+</body>
+</html>
